@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Banana films</title>
+  <link rel="stylesheet" href="estilos2.css">
+  <link rel="icon" href="banana.png" type="image/png">
+</head>
+<body>
+
+  <!-- Barra de Navegación -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Menú de hamburguesa -->
+      <div class="menu-hamburguesa" onclick="toggleMenu()">
+        &#9776;
+      </div>
+
+      <!-- Menú lateral -->
+      <div class="menu-desplegable" id="menu">
+        <ul class="navbar-links">
+          <li><a href="index.html">Inicio</a></li>
+        </ul>
+        <form action="javascript:void(0);" method="get" class="buscador" onsubmit="buscarPelicula()">
+          <input type="text" name="query" placeholder="Buscar película..." id="search-input">
+          <button type="submit">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <h1>Películas Disponibles</h1>
+
+  <div class="catalogo">
+    <a href="maleficio.html" class="pelicula">
+      <img src="maleficio.jpg" alt="Maleficio">
+    </a>
+    <a href="the-ring.html" class="pelicula">
+      <img src="the-ring.jpg" alt="The Ring">
+    </a>
+    <a href="the-ring2.html" class="pelicula">
+      <img src="the-ring2.jpg" alt="The Ring 2">
+    </a>
+    <a href="the-ring3.html" class="pelicula">
+      <img src="the-ring3.jpg" alt="The Ring 3">
+    </a>
+  </div>
+
+  <div id="resultados" style="margin-top: 20px;"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+/* ===== Estilos Generales ===== */
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* ===== Catálogo ===== */
+  .catalogo {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .pelicula {
+    background-color: #111;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .pelicula:hover { transform: scale(1.05); }
+  .pelicula img { width: 200px; border-radius: 5px; }
+  
+  /* ===== Detalle ===== */
+  .detalle {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #222;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 40px auto 0;
+  }
+  .servidores button {
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    margin: 10px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .servidores button:hover { background-color: #ffd633; }
+  iframe {
+    width: 100%;
+    height: 450px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+  }
+  
+  /* ===== Navbar ===== */
+  .navbar {
+    display: flex;
+    align-items: center;
+    background-color: #000;
+    padding: 10px 20px;
+    position: relative;
+    z-index: 1001;
+  }
+  .menu-hamburguesa {
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #fff;
+    background: none;
+    border: none;
+  }
+  
+  /* ===== Menú Lateral ===== */
+  .menu-desplegable {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #111;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1000;
+  }
+  .menu-desplegable.show {
+    transform: translateX(0);
+  }
+  .navbar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .navbar-links li { margin-bottom: 10px; }
+  .navbar-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1em;
+  }
+  .navbar-links a:hover { color: #ffcc00; }
+  
+  /* ===== Buscador ===== */
+  .buscador {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .buscador input {
+    padding: 5px;
+    font-size: 1em;
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #ffcc00;
+    border-radius: 3px;
+  }
+  .buscador button {
+    padding: 5px 10px;
+    font-size: 1em;
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .buscador button:hover { background-color: #ffd633; }
+  
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    /* ocultamos links de navbar si hay */
+    .navbar-links { display: none; }
+    .buscador { width: 100%; }
+    iframe { height: 300px; }
+  }
+  

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>The Ring 2 </title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <h1>The Ring</h1>
+
+  <div class="detalle">
+    <img src="the-ring2.jpg" alt="The Ring" style="width: 200px; border-radius: 10px;">
+    <p><strong>Sinopsis:</strong> Una misteriosa cinta de vídeo lleva a la muerte a quien la ve. Un periodista intenta descubrir la verdad.</p>
+    <p><strong>Duración:</strong> 1h 45min</p>
+    <p><strong>Director:</strong> Gore Verbinski</p>
+
+    <div class="servidores">
+      <p><strong>Ver en:</strong></p>
+      <button onclick="cambiarServidor('https://ok.ru/videoembed/5098716662485?nochat=1')">Servidor OKRU</button>
+      <button onclick="cambiarServidor('https://www.youtube.com/embed/bLZQ8w8N2sA')">Servidor YouTube</button>
+    </div>
+
+    <iframe id="player" src="" allow="autoplay" allowfullscreen style="display: none; width: 100%; height: 500px; margin-top: 20px;"></iframe>
+  </div>
+
+  <script>
+    function cambiarServidor(url) {
+      document.getElementById('player').style.display = 'block';
+      document.getElementById('player').src = url;
+    }
+  </script>
+
+</body>
+</html>

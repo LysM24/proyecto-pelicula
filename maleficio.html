@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Maleficio</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <h1>Maleficio</h1>
+
+  <div class="detalle">
+    <img src="maleficio.jpg" alt="Maleficio" style="width: 200px; border-radius: 10px;">
+    <p><strong>Sinopsis:</strong> Ruo-nan (Hsuan-yen Tsai) se reúne con su hija, Dodo, tras salir de seis años de intensa terapia después de una serie de acontecimientos traumáticos. [...]</p>
+    <p><strong>Duración:</strong> 1h 50min</p>
+    <p><strong>Director:</strong> Kevin Ko</p>
+
+    <div class="servidores">
+      <p><strong>Ver en:</strong></p>
+      <button onclick="cambiarServidor()">Servidor Local</button>
+    </div>
+
+    <!-- CONTENEDOR VIDEO + CHAT -->
+    <div id="player-chat-container">
+      <!-- Reproductor de video -->
+      <div id="player-container">
+        <video id="player" width="100%" height="500" playsinline>
+          <!-- Fuente se agregará vía JavaScript -->
+        </video>
+
+        <div id="controles-anfitrion" style="display: none; margin-top: 10px;">
+          <button onclick="reproducir()">▶ Reproducir</button>
+          <button onclick="pausar()">⏸ Pausar</button>
+        </div>
+
+        <div id="controles-espectador" style="display: none; margin-top: 10px;">
+          <button onclick="activarPantallaCompleta()">🔳 Pantalla completa</button>
+        </div>
+      </div>
+
+      <!-- Chat en vivo -->
+      <div id="chat-container">
+        <h2>Chat en vivo</h2>
+        <div id="chat-messages"></div>
+        <form id="chat-form">
+          <input type="text" id="chat-input" placeholder="Escribe un mensaje...">
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Socket.IO + JS -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const video = document.getElementById('player');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('chat-input');
+    const messages = document.getElementById('chat-messages');
+
+    let esAnfitrion = false;
+    let ultimoTiempoSincronizado = 0;
+
+    // Cargar fuente de video
+    const urlBase = `${window.location.protocol}//${window.location.host}`;
+    const source = document.createElement('source');
+    source.src = `${urlBase}/maleficio.mp4`; // Cambia la URL según tu servidor
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    video.load(); // Cargar el video
+    video.muted = false;
+
+    // Unirse a sala
+    socket.emit('unirseSala', 'maleficio');
+
+    socket.on('asignadoAnfitrion', () => {
+      esAnfitrion = true;
+      console.log("🎬 Eres el anfitrión.");
+      mostrarControlesAnfitrion();
+      iniciarSincronizacion();
+    });
+
+    // Chat
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!input.value.trim()) return;
+      socket.emit('chat message', input.value.trim());
+      input.value = '';
+    });
+
+    socket.on('chat message', (msg) => {
+      const div = document.createElement('div');
+      div.classList.add('mensaje');
+      div.textContent = msg;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    });
+
+    // Reproducir/pausar desde servidor
+    socket.on('reproducir', () => video.play().catch(() => {}));
+    socket.on('pausar', () => video.pause());
+
+    socket.on('sync', (tiempo) => {
+      if (esAnfitrion) return;
+      const diferencia = Math.abs(video.currentTime - tiempo);
+      if (diferencia > 1) video.currentTime = tiempo;
+    });
+
+    function cambiarServidor() {
+      if (esAnfitrion) {
+        socket.emit('reproducir', 'Maleficio.mp4');
+      }
+    }
+
+    function mostrarControlesAnfitrion() {
+      document.getElementById('controles-anfitrion').style.display = 'block';
+      video.controls = true;
+      video.muted = false;
+    }
+
+    function iniciarSincronizacion() {
+      setInterval(() => {
+        if (esAnfitrion && !video.paused) {
+          const tiempoActual = video.currentTime;
+          if (Math.abs(tiempoActual - ultimoTiempoSincronizado) > 1) {
+            socket.emit('sync', tiempoActual);
+            ultimoTiempoSincronizado = tiempoActual;
+          }
+        }
+      }, 500);
+    }
+
+    // Mostrar controles para espectadores
+    socket.on('connect', () => {
+      setTimeout(() => {
+        if (!esAnfitrion) {
+          video.controls = false;
+          video.style.pointerEvents = 'none';
+          document.getElementById('controles-espectador').style.display = 'block';
+        }
+      }, 1000); // Esperamos 1 segundo para ver si el servidor lo asignó como anfitrión
+    });
+
+    // Botones de control
+    function reproducir() {
+      socket.emit('reproducir');
+    }
+
+    function pausar() {
+      socket.emit('pausar');
+    }
+
+    function activarPantallaCompleta() {
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen();
+      } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen();
+      }
+    }
+  </script>
+</body>
+</html>
